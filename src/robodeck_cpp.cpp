@@ -5,11 +5,6 @@
  
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "robodeck_cpp_test");
-	if (argc != 3){
-		ROS_INFO("usage: add_two_ints_client X Y");
-		return 1;
-	}
- 
 	ros::NodeHandle n;
 	ros::ServiceClient connectService = n.serviceClient<robodeck_msgs::connect>("robodeck/connect");
 	robodeck_msgs::connect connectSrv;
