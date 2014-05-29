@@ -96,14 +96,27 @@ catkin_package(
 # )
 
 ## Declare a cpp executable
-add_executable(robodeck_cpp_test src/robodeck_cpp.cpp)
+# primeiro executavel
+add_executable(move_test src/move.cpp)
+add_executable(turn_test src/turn.cpp)
+add_executable(strafe_test src/strafe.cpp)
+add_executable(rotate_test src/rotate.cpp)
+add_executable(readInfraredSensors_test src/readInfraredSensors.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(robodeck_cpp_test robodeck_msgs)
+add_dependencies(move_test robodeck_msgs)
+add_dependencies(turn_test robodeck_msgs)
+add_dependencies(strafe_test robodeck_msgs)
+add_dependencies(rotate_test robodeck_msgs)
+add_dependencies(readInfraredSensors_test robodeck_msgs)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(robodeck_cpp_test ${catkin_LIBRARIES})
+target_link_libraries(move_test ${catkin_LIBRARIES})
+target_link_libraries(turn_test ${catkin_LIBRARIES})
+target_link_libraries(strafe_test ${catkin_LIBRARIES})
+target_link_libraries(rotate_test ${catkin_LIBRARIES})
+target_link_libraries(readInfraredSensors_test ${catkin_LIBRARIES})
 
 #############
 ## Install ##
