@@ -13,21 +13,23 @@ int main(int argc, char **argv) {
 	connectSrv.request.ip = "192.168.1.1";
 	connectSrv.request.port = 2000;
 
+	ros::ServiceClient moveService = n.serviceClient<robodeck_msgs::move>("robodeck/move");
+	robodeck_msgs::move moveSrv;
+	moveSrv.request.intensity = 32767;
+
+	ros::ServiceClient disconnectService = n.serviceClient<robodeck_msgs::disconnect>("robodeck/disconnect");
+	robodeck_msgs::disconnect disconnectSrv;
+
 	if (connectService.call(connectSrv)){
 		if (connectSrv.response.isConnected) {
 			ROS_INFO("Conectou-se ao robo!");
-			
-			ros::ServiceClient moveService = n.serviceClient<robodeck_msgs::move>("robodeck/move");
-			robodeck_msgs::move moveSrv;
-			moveSrv.request.intensity = 32767;
 			
 			if (moveService.call(moveSrv)) {
 				if (moveSrv.response.executed) {
 					ROS_INFO("Robo movimentou!");
 				}
 			}
-			ros::ServiceClient disconnectService = n.serviceClient<robodeck_msgs::disconnect>("robodeck/disconnect");
-			robodeck_msgs::disconnect disconnectSrv;
+			
 			if (disconnectService.call(disconnectSrv)) {
 				if (disconnectSrv.response.isDisconnected) {
 					ROS_INFO("Desconectou-se do robô com sucesso!");

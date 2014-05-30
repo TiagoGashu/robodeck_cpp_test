@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "robodeck_msgs/connect.h"
+#include "robodeck_msgs/move.h"
 #include "robodeck_msgs/rotate.h"
 #include "robodeck_msgs/disconnect.h"
 #include <cstdlib>
@@ -13,22 +14,34 @@ int main(int argc, char **argv) {
 	connectSrv.request.ip = "192.168.1.1";
 	connectSrv.request.port = 2000;
 
+	ros::ServiceClient rotateService = n.serviceClient<robodeck_msgs::rotate>("robodeck/rotate");
+	robodeck_msgs::rotate rotateSrv;
+	rotateSrv.request.intensity = 15000;
+	rotateSrv.request.side = 0;
+
+	ros::ServiceClient moveService = n.serviceClient<robodeck_msgs::move>("robodeck/move");
+	robodeck_msgs::move moveSrv;
+	moveSrv.request.intensity = 0;
+
+	ros::ServiceClient disconnectService = n.serviceClient<robodeck_msgs::disconnect>("robodeck/disconnect");
+	robodeck_msgs::disconnect disconnectSrv;
+
 	if (connectService.call(connectSrv)){
 		if (connectSrv.response.isConnected) {
 			ROS_INFO("Conectou-se ao robo!");
-			
-			ros::ServiceClient rotateService = n.serviceClient<robodeck_msgs::rotate>("robodeck/rotate");
-			robodeck_msgs::rotate rotateSrv;
-			rotateSrv.request.intensity = 15000;
-			rotateSrv.request.side = 0;
 			
 			if (rotateService.call(rotateSrv)) {
 				if (rotateSrv.response.executed) {
 					ROS_INFO("O robô rotacionou no sentido anti-horário!");
 				}
 			}
-			ros::ServiceClient disconnectService = n.serviceClient<robodeck_msgs::disconnect>("robodeck/disconnect");
-			robodeck_msgs::disconnect disconnectSrv;
+
+			if (moveService.call(moveSrv)) {
+				if (moveSrv.response.executed) {
+					ROS_INFO("Parou o robo!");
+				}
+			}
+			
 			if (disconnectService.call(disconnectSrv)) {
 				if (disconnectSrv.response.isDisconnected) {
 					ROS_INFO("Desconectou-se do robô com sucesso!");
